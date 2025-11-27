@@ -84,3 +84,13 @@ export interface ClipLike {
   user_id: string
   created_at: string
 }
+
+export interface Comment {
+  id: string
+  clip_id: string
+  user_id: string
+  content: string
+  created_at: string
+  updated_at: string
+  profile?: Profile
+}

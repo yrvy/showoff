@@ -7,6 +7,7 @@ import SignUp from './pages/SignUp'
 import Dashboard from './pages/Dashboard'
 import Profile from './pages/Profile'
 import EditProfile from './pages/EditProfile'
+import ForYou from './pages/ForYou'
 import NotFound from './pages/NotFound'
 
 function ProtectedRoute({ children }: { children: React.ReactNode }) {
@@ -30,6 +31,10 @@ function ProtectedRoute({ children }: { children: React.ReactNode }) {
 function App() {
   return (
     <Routes>
+      {/* Full-screen routes (no layout) */}
+      <Route path="/foryou" element={<ForYou />} />
+
+      {/* Routes with layout */}
       <Route path="/" element={<Layout />}>
         <Route index element={<Home />} />
         <Route path="login" element={<Login />} />
