@@ -1,0 +1,86 @@
+import { createClient } from '@supabase/supabase-js'
+
+const supabaseUrl = import.meta.env.VITE_SUPABASE_URL
+const supabaseAnonKey = import.meta.env.VITE_SUPABASE_ANON_KEY
+
+if (!supabaseUrl || !supabaseAnonKey) {
+  throw new Error('Missing Supabase environment variables. Please check your .env file.')
+}
+
+export const supabase = createClient(supabaseUrl, supabaseAnonKey, {
+  auth: {
+    autoRefreshToken: true,
+    persistSession: true,
+    detectSessionInUrl: true,
+  },
+})
+
+// Database types
+export interface Profile {
+  id: string
+  username: string
+  display_name: string | null
+  bio: string | null
+  avatar_url: string | null
+  banner_url: string | null
+  is_verified: boolean
+  created_at: string
+  updated_at: string
+  twitter_url: string | null
+  twitch_url: string | null
+  youtube_url: string | null
+  discord_tag: string | null
+  instagram_url: string | null
+}
+
+export interface Peripheral {
+  id: string
+  user_id: string
+  category: 'mouse' | 'keyboard' | 'mousepad' | 'headset' | 'monitor' | 'microphone' | 'controller' | 'chair' | 'other'
+  brand: string
+  model: string
+  image_url: string | null
+  purchase_url: string | null
+  notes: string | null
+  display_order: number
+  created_at: string
+  updated_at: string
+}
+
+export interface GameRank {
+  id: string
+  user_id: string
+  game: 'valorant' | 'cs2' | 'r6' | 'apex' | 'league' | 'overwatch' | 'fortnite' | 'cod' | 'other'
+  rank: string
+  rank_tier: string | null
+  peak_rank: string | null
+  hours_played: number | null
+  icon_url: string | null
+  is_primary: boolean
+  created_at: string
+  updated_at: string
+}
+
+export interface Clip {
+  id: string
+  user_id: string
+  title: string
+  description: string | null
+  video_url: string
+  thumbnail_url: string | null
+  game: string | null
+  duration: number | null
+  file_size: number | null
+  views: number
+  likes: number
+  is_featured: boolean
+  created_at: string
+  updated_at: string
+}
+
+export interface ClipLike {
+  id: string
+  clip_id: string
+  user_id: string
+  created_at: string
+}
