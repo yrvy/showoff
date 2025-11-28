@@ -22,9 +22,9 @@ export default function ClipUploadModal({ onClose, onSuccess }: ClipUploadModalP
   const handleFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const file = e.target.files?.[0]
     if (file) {
-      // Check file size (max 500MB)
-      if (file.size > 524288000) {
-        toast.error('Video file is too large. Maximum size is 500MB.')
+      // Check file size (max 25MB)
+      if (file.size > 26214400) {
+        toast.error('Video file is too large. Maximum size is 25MB.')
         return
       }
       setVideoFile(file)
@@ -119,7 +119,7 @@ export default function ClipUploadModal({ onClose, onSuccess }: ClipUploadModalP
                 }`}
               >
                 <Upload className="h-6 w-6" />
-                <span>{videoFile ? videoFile.name : 'Choose video file (max 500MB)'}</span>
+                <span>{videoFile ? videoFile.name : 'Choose video file (max 25MB)'}</span>
               </label>
             </div>
           </div>

@@ -12,7 +12,7 @@ interface ClipWithProfile extends Clip {
 }
 
 export default function ClipPage() {
-  const { username, clipId } = useParams<{ username: string; clipId: string }>()
+  const { username, shortId } = useParams<{ username: string; shortId: string }>()
   const navigate = useNavigate()
   const { user, profile: currentProfile } = useAuth()
   const [clip, setClip] = useState<ClipWithProfile | null>(null)
@@ -22,14 +22,19 @@ export default function ClipPage() {
   const [isLiked, setIsLiked] = useState(false)
 
   useEffect(() => {
-    if (username && clipId) {
+    if (username && shortId) {
       fetchClip()
+    }
+  }, [username, shortId])
+
+  useEffect(() => {
+    if (clip) {
       fetchComments()
       if (user) {
         checkIfLiked()
       }
     }
-  }, [username, clipId, user])
+  }, [clip, user])
 
   async function fetchClip() {
     try {
@@ -39,7 +44,7 @@ export default function ClipPage() {
           *,
           profile:profiles(*)
         `)
-        .eq('id', clipId)
+        .eq('short_id', shortId)
         .single()
 
       if (error) throw error
@@ -68,6 +73,8 @@ export default function ClipPage() {
   }
 
   async function fetchComments() {
+    if (!clip) return
+
     try {
       const { data, error } = await supabase
         .from('comments')
@@ -75,7 +82,7 @@ export default function ClipPage() {
           *,
           profile:profiles(*)
         `)
-        .eq('clip_id', clipId)
+        .eq('clip_id', clip.id)
         .order('created_at', { ascending: false })
 
       if (error) throw error
@@ -87,13 +94,13 @@ export default function ClipPage() {
   }
 
   async function checkIfLiked() {
-    if (!user) return
+    if (!user || !clip) return
 
     try {
       const { data, error } = await supabase
         .from('clip_likes')
         .select('id')
-        .eq('clip_id', clipId)
+        .eq('clip_id', clip.id)
         .eq('user_id', user.id)
         .maybeSingle()
 
@@ -139,7 +146,7 @@ export default function ClipPage() {
   async function handleShare() {
     if (!clip) return
 
-    const url = `${window.location.origin}/${clip.profile?.username}/${clip.id}`
+    const url = `${window.location.origin}/${clip.profile?.username}/${clip.short_id}`
 
     if (navigator.share) {
       try {
@@ -201,7 +208,7 @@ export default function ClipPage() {
   }
 
   const siteUrl = 'https://www.showoff.wtf'
-  const clipUrl = `${siteUrl}/${clip.profile?.username}/${clip.id}`
+  const clipUrl = `${siteUrl}/${clip.profile?.username}/${clip.short_id}`
 
   return (
     <>

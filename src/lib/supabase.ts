@@ -64,6 +64,7 @@ export interface GameRank {
 export interface Clip {
   id: string
   user_id: string
+  short_id: string
   title: string
   description: string | null
   video_url: string

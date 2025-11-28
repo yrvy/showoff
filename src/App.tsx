@@ -58,7 +58,7 @@ function App() {
             }
           />
 
-          <Route path=":username/:clipId" element={<ClipPage />} />
+          <Route path=":username/:shortId" element={<ClipPage />} />
           <Route path=":username" element={<Profile />} />
           <Route path="*" element={<NotFound />} />
         </Route>
