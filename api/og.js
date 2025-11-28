@@ -29,20 +29,15 @@ export default async function handler(req, res) {
     // Log for debugging
     console.log('OG endpoint hit:', { username, shortId, userAgent: req.headers['user-agent'] })
 
-    // Format description for Discord - keep it simple
-    const parts = []
+    // Format stats for Discord embed - put everything in one line
+    const statsLine = `@${clip.profile.username} • ${formatNumber(clip.views)} views • ${formatNumber(clip.likes)} likes${clip.game ? ` • ${clip.game.toUpperCase()}` : ''}`
 
-    if (clip.description) {
-      parts.push(clip.description)
-    }
+    // Use clip description if available, otherwise use stats
+    const description = clip.description || `Watch this ${clip.game || 'gaming'} clip`
 
-    // Add stats line
-    const statsLine = `👤 @${clip.profile.username} | 👁️ ${formatNumber(clip.views)} views | ❤️ ${formatNumber(clip.likes)} likes${clip.game ? ` | 🎮 ${clip.game.toUpperCase()}` : ''}`
-    parts.push(statsLine)
-
-    const description = parts.join('\n')
-
-    const ogTitle = `${clip.title} - @${clip.profile.username}`
+    // Put stats in the title for visibility
+    const ogTitle = `${clip.title}`
+    const ogSiteName = `ShowOff • ${statsLine}`
 
     const html = `<!DOCTYPE html>
 <html lang="en">
@@ -55,7 +50,7 @@ export default async function handler(req, res) {
     <meta property="og:title" content="${escapeHtml(ogTitle)}">
     <meta property="og:description" content="${escapeHtml(description)}">
     <meta property="og:url" content="https://www.showoff.wtf/${username}/${shortId}">
-    <meta property="og:site_name" content="ShowOff - Gaming Clips">
+    <meta property="og:site_name" content="${escapeHtml(ogSiteName)}">
 
     <meta property="og:video" content="${clip.video_url}">
     <meta property="og:video:secure_url" content="${clip.video_url}">
