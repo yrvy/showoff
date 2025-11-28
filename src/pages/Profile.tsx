@@ -13,6 +13,7 @@ import {
   Heart,
   Play,
   Shield,
+  Share2,
 } from 'lucide-react'
 import { formatRelativeTime, formatNumber, getGameIcon, getPeripheralIcon } from '@/lib/utils'
 import { useAuth } from '@/hooks/useAuth'
@@ -130,6 +131,33 @@ export default function Profile() {
     } catch (error: any) {
       toast.error('Failed to like clip')
     }
+  }
+
+  async function handleShareClip(clip: Clip) {
+    if (!profile) return
+
+    const url = `${window.location.origin}/${profile.username}/${clip.short_id}`
+
+    if (navigator.share) {
+      try {
+        await navigator.share({
+          title: clip.title,
+          text: clip.description || '',
+          url: url,
+        })
+      } catch (error) {
+        if ((error as Error).name !== 'AbortError') {
+          copyToClipboard(url)
+        }
+      }
+    } else {
+      copyToClipboard(url)
+    }
+  }
+
+  function copyToClipboard(text: string) {
+    navigator.clipboard.writeText(text)
+    toast.success('Link copied to clipboard!')
   }
 
   if (loading) {
@@ -379,6 +407,15 @@ export default function Profile() {
                       >
                         <Heart className="h-4 w-4" />
                         {formatNumber(clip.likes)}
+                      </button>
+                      <button
+                        onClick={(e) => {
+                          e.stopPropagation()
+                          handleShareClip(clip)
+                        }}
+                        className="flex items-center gap-1 hover:text-blue-400 transition-colors"
+                      >
+                        <Share2 className="h-4 w-4" />
                       </button>
                       <span className="ml-auto text-xs">{formatRelativeTime(clip.created_at)}</span>
                     </div>

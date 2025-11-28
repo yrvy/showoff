@@ -69,9 +69,11 @@ export default async function handler(req, res) {
     <meta name="theme-color" content="#FFFFFF">
 
     <script>
-      // Redirect non-bots to the React app
+      // Redirect non-bots to the React app (use query param to prevent loop)
       if (!/bot|crawler|spider|discordbot|twitterbot|facebookexternalhit/i.test(navigator.userAgent)) {
-        window.location.href = "https://www.showoff.wtf/${username}/${shortId}";
+        if (!window.location.search.includes('app=1')) {
+          window.location.href = "https://www.showoff.wtf/${username}/${shortId}?app=1";
+        }
       }
     </script>
 </head>
