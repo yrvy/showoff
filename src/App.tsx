@@ -31,12 +31,9 @@ function ProtectedRoute({ children }: { children: React.ReactNode }) {
 function App() {
   return (
     <Routes>
-      {/* Full-screen routes (no layout) */}
-      <Route path="/foryou" element={<ForYou />} />
-
-      {/* Routes with layout */}
       <Route path="/" element={<Layout />}>
         <Route index element={<Home />} />
+        <Route path="foryou" element={<ForYou />} />
         <Route path="login" element={<Login />} />
         <Route path="signup" element={<SignUp />} />
 
