@@ -22,7 +22,6 @@ export default function ForYou() {
   const [isTransitioning, setIsTransitioning] = useState(false)
 
   const videoRefs = useRef<(HTMLVideoElement | null)[]>([])
-  const containerRef = useRef<HTMLDivElement>(null)
 
   useEffect(() => {
     fetchClips()
