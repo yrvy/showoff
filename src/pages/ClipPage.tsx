@@ -270,7 +270,7 @@ export default function ClipPage() {
                   autoPlay
                   loop
                   className="w-full aspect-video bg-black"
-                  poster={clip.thumbnail_url}
+                  poster={clip.thumbnail_url || undefined}
                 />
               </div>
 
