@@ -95,3 +95,42 @@ export interface Comment {
   updated_at: string
   profile?: Profile
 }
+
+export interface Follow {
+  id: string
+  follower_id: string
+  following_id: string
+  created_at: string
+}
+
+export interface Conversation {
+  id: string
+  created_at: string
+  updated_at: string
+}
+
+export interface ConversationParticipant {
+  id: string
+  conversation_id: string
+  user_id: string
+  last_read_at: string
+  created_at: string
+}
+
+export interface Message {
+  id: string
+  conversation_id: string
+  sender_id: string
+  content: string
+  created_at: string
+  updated_at: string
+  is_read: boolean
+  sender?: Profile
+}
+
+export interface ProfileStats {
+  follower_count: number
+  following_count: number
+  total_likes: number
+  total_views: number
+}
