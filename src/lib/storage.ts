@@ -12,7 +12,7 @@ export async function uploadFile(
   const fileName = customName || `${Date.now()}-${Math.random().toString(36).substring(7)}`
   const filePath = `${userId}/${fileName}.${fileExt}`
 
-  const { error: uploadError, data } = await supabase.storage
+  const { error: uploadError } = await supabase.storage
     .from(bucket)
     .upload(filePath, file, {
       cacheControl: '3600',

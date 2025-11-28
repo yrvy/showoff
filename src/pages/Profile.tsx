@@ -3,7 +3,6 @@ import { useParams, Link } from 'react-router-dom'
 import { supabase, Profile as ProfileType, Peripheral, GameRank, Clip } from '@/lib/supabase'
 import {
   User,
-  MapPin,
   ExternalLink,
   Twitter,
   Twitch,

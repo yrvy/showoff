@@ -1,4 +1,4 @@
-import { useState, useEffect } from 'react'
+import { useState } from 'react'
 import { useAuth } from '@/hooks/useAuth'
 import { supabase, Peripheral } from '@/lib/supabase'
 import { uploadFile } from '@/lib/storage'

@@ -1,4 +1,4 @@
-import { useState, useEffect, useRef, useCallback } from 'react'
+import { useState, useEffect, useRef } from 'react'
 import { supabase, Clip, Comment, Profile } from '@/lib/supabase'
 import { useAuth } from '@/hooks/useAuth'
 import { Heart, MessageCircle, Share2, MoreVertical, X, Send } from 'lucide-react'
@@ -109,7 +109,7 @@ export default function ForYou() {
     }
   }
 
-  async function handleShare(clip: Clip) {
+  async function handleShare(clip: ClipWithProfile) {
     const url = `${window.location.origin}/${clip.profile?.username}`
 
     if (navigator.share) {
