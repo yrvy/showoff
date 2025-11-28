@@ -110,7 +110,7 @@ export default function ForYou() {
   }
 
   async function handleShare(clip: ClipWithProfile) {
-    const url = `${window.location.origin}/clip/${clip.id}`
+    const url = `${window.location.origin}/${clip.profile?.username}/${clip.id}`
 
     if (navigator.share) {
       try {

@@ -1,4 +1,5 @@
 import { Routes, Route, Navigate } from 'react-router-dom'
+import { HelmetProvider } from 'react-helmet-async'
 import { useAuth } from './hooks/useAuth'
 import Layout from './components/Layout'
 import Home from './pages/Home'
@@ -8,6 +9,7 @@ import Dashboard from './pages/Dashboard'
 import Profile from './pages/Profile'
 import EditProfile from './pages/EditProfile'
 import ForYou from './pages/ForYou'
+import ClipPage from './pages/ClipPage'
 import NotFound from './pages/NotFound'
 
 function ProtectedRoute({ children }: { children: React.ReactNode }) {
@@ -30,35 +32,38 @@ function ProtectedRoute({ children }: { children: React.ReactNode }) {
 
 function App() {
   return (
-    <Routes>
-      <Route path="/" element={<Layout />}>
-        <Route index element={<Home />} />
-        <Route path="foryou" element={<ForYou />} />
-        <Route path="login" element={<Login />} />
-        <Route path="signup" element={<SignUp />} />
+    <HelmetProvider>
+      <Routes>
+        <Route path="/" element={<Layout />}>
+          <Route index element={<Home />} />
+          <Route path="foryou" element={<ForYou />} />
+          <Route path="login" element={<Login />} />
+          <Route path="signup" element={<SignUp />} />
 
-        <Route
-          path="dashboard"
-          element={
-            <ProtectedRoute>
-              <Dashboard />
-            </ProtectedRoute>
-          }
-        />
+          <Route
+            path="dashboard"
+            element={
+              <ProtectedRoute>
+                <Dashboard />
+              </ProtectedRoute>
+            }
+          />
 
-        <Route
-          path="dashboard/edit"
-          element={
-            <ProtectedRoute>
-              <EditProfile />
-            </ProtectedRoute>
-          }
-        />
+          <Route
+            path="dashboard/edit"
+            element={
+              <ProtectedRoute>
+                <EditProfile />
+              </ProtectedRoute>
+            }
+          />
 
-        <Route path=":username" element={<Profile />} />
-        <Route path="*" element={<NotFound />} />
-      </Route>
-    </Routes>
+          <Route path=":username/:clipId" element={<ClipPage />} />
+          <Route path=":username" element={<Profile />} />
+          <Route path="*" element={<NotFound />} />
+        </Route>
+      </Routes>
+    </HelmetProvider>
   )
 }
 
