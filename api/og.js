@@ -26,14 +26,17 @@ export default async function handler(req, res) {
       return res.status(404).send('Clip not found')
     }
 
-    const description = [
-      clip.description || '',
-      '',
+    // Format stats for Discord embed
+    const stats = [
       `👤 @${clip.profile.username}`,
-      `👁️ ${clip.views} views`,
-      `❤️ ${clip.likes} likes`,
+      `👁️ ${formatNumber(clip.views)} views`,
+      `❤️ ${formatNumber(clip.likes)} likes`,
       clip.game ? `🎮 ${clip.game.toUpperCase()}` : '',
-    ].filter(Boolean).join('\\n')
+    ].filter(Boolean).join(' • ')
+
+    const description = clip.description
+      ? `${clip.description}\n\n${stats}`
+      : stats
 
     const html = `<!DOCTYPE html>
 <html lang="en">
@@ -99,4 +102,14 @@ function escapeHtml(text) {
     "'": '&#039;',
   }
   return String(text).replace(/[&<>"']/g, (m) => map[m])
+}
+
+function formatNumber(num) {
+  if (num >= 1000000) {
+    return (num / 1000000).toFixed(1).replace(/\.0$/, '') + 'M'
+  }
+  if (num >= 1000) {
+    return (num / 1000).toFixed(1).replace(/\.0$/, '') + 'K'
+  }
+  return num.toString()
 }
