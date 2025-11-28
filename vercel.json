@@ -1,6 +1,17 @@
 {
   "rewrites": [
     {
+      "source": "/:username/:shortId",
+      "has": [
+        {
+          "type": "header",
+          "key": "user-agent",
+          "value": ".*(bot|crawler|spider|Discordbot|Twitterbot|facebookexternalhit).*"
+        }
+      ],
+      "destination": "/api/og?username=:username&shortId=:shortId"
+    },
+    {
       "source": "/(.*)",
       "destination": "/index.html"
     }
