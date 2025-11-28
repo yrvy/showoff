@@ -26,30 +26,36 @@ export default async function handler(req, res) {
       return res.status(404).send('Clip not found')
     }
 
-    // Format stats for Discord embed
-    const stats = [
-      `👤 @${clip.profile.username}`,
-      `👁️ ${formatNumber(clip.views)} views`,
-      `❤️ ${formatNumber(clip.likes)} likes`,
-      clip.game ? `🎮 ${clip.game.toUpperCase()}` : '',
-    ].filter(Boolean).join(' • ')
+    // Log for debugging
+    console.log('OG endpoint hit:', { username, shortId, userAgent: req.headers['user-agent'] })
 
-    const description = clip.description
-      ? `${clip.description}\n\n${stats}`
-      : stats
+    // Format description for Discord - keep it simple
+    const parts = []
+
+    if (clip.description) {
+      parts.push(clip.description)
+    }
+
+    // Add stats line
+    const statsLine = `👤 @${clip.profile.username} | 👁️ ${formatNumber(clip.views)} views | ❤️ ${formatNumber(clip.likes)} likes${clip.game ? ` | 🎮 ${clip.game.toUpperCase()}` : ''}`
+    parts.push(statsLine)
+
+    const description = parts.join('\n')
+
+    const ogTitle = `${clip.title} - @${clip.profile.username}`
 
     const html = `<!DOCTYPE html>
 <html lang="en">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>${escapeHtml(clip.title)} - @${clip.profile.username} | ShowOff</title>
+    <title>${escapeHtml(ogTitle)} | ShowOff</title>
 
     <meta property="og:type" content="video.other">
-    <meta property="og:title" content="${escapeHtml(clip.title)}">
+    <meta property="og:title" content="${escapeHtml(ogTitle)}">
     <meta property="og:description" content="${escapeHtml(description)}">
     <meta property="og:url" content="https://www.showoff.wtf/${username}/${shortId}">
-    <meta property="og:site_name" content="ShowOff">
+    <meta property="og:site_name" content="ShowOff - Gaming Clips">
 
     <meta property="og:video" content="${clip.video_url}">
     <meta property="og:video:secure_url" content="${clip.video_url}">
@@ -74,13 +80,23 @@ export default async function handler(req, res) {
       }
     </script>
 </head>
-<body style="font-family: sans-serif; max-width: 800px; margin: 50px auto; padding: 20px;">
-    <h1>${escapeHtml(clip.title)}</h1>
-    <p>By <strong>@${clip.profile.username}</strong></p>
-    ${clip.description ? `<p>${escapeHtml(clip.description)}</p>` : ''}
-    <p>👁️ ${clip.views} views | ❤️ ${clip.likes} likes</p>
-    ${clip.video_url ? `<video controls style="width: 100%; max-width: 800px;"><source src="${clip.video_url}" type="video/mp4"></video>` : ''}
-    <p><a href="https://www.showoff.wtf/${username}/${shortId}">View on ShowOff</a></p>
+<body style="font-family: sans-serif; max-width: 800px; margin: 50px auto; padding: 20px; background: #000; color: #fff;">
+    <h1 style="margin: 0 0 10px 0;">${escapeHtml(clip.title)}</h1>
+    <p style="margin: 5px 0; color: #aaa;">By <strong style="color: #fff;">@${clip.profile.username}</strong></p>
+    ${clip.description ? `<p style="margin: 15px 0; line-height: 1.6;">${escapeHtml(clip.description)}</p>` : ''}
+    <p style="margin: 10px 0; color: #aaa;">
+      👁️ <strong style="color: #fff;">${formatNumber(clip.views)}</strong> views |
+      ❤️ <strong style="color: #fff;">${formatNumber(clip.likes)}</strong> likes
+      ${clip.game ? ` | 🎮 <strong style="color: #fff;">${clip.game.toUpperCase()}</strong>` : ''}
+    </p>
+    ${clip.video_url ? `<video controls style="width: 100%; max-width: 800px; margin: 20px 0; border-radius: 8px;"><source src="${clip.video_url}" type="video/mp4"></video>` : ''}
+    <p><a href="https://www.showoff.wtf/${username}/${shortId}" style="color: #fff; background: #333; padding: 10px 20px; text-decoration: none; border-radius: 5px; display: inline-block;">View on ShowOff</a></p>
+
+    <!-- Debug info -->
+    <div style="margin-top: 40px; padding: 20px; background: #111; border-radius: 8px; font-size: 12px; color: #666;">
+      <p style="margin: 5px 0;">User Agent: ${escapeHtml(req.headers['user-agent'] || 'Unknown')}</p>
+      <p style="margin: 5px 0;">Stats line: ${escapeHtml(statsLine)}</p>
+    </div>
 </body>
 </html>`
 
