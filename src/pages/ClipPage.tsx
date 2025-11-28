@@ -210,38 +210,63 @@ export default function ClipPage() {
   const siteUrl = 'https://www.showoff.wtf'
   const clipUrl = `${siteUrl}/${clip.profile?.username}/${clip.short_id}`
 
+  // Create rich description with stats for Discord embed
+  const embedDescription = [
+    clip.description || '',
+    '',
+    `👤 @${clip.profile?.username}`,
+    `👁️ ${formatNumber(clip.views)} views`,
+    `❤️ ${formatNumber(clip.likes)} likes`,
+    `💬 ${comments.length} comments`,
+    clip.game ? `🎮 ${clip.game.toUpperCase()}` : '',
+  ].filter(Boolean).join('\n')
+
   return (
     <>
       <Helmet>
         <title>{clip.title} - @{clip.profile?.username} | ShowOff</title>
-        <meta name="description" content={clip.description || `Watch ${clip.title} by @${clip.profile?.username} on ShowOff`} />
+        <meta name="description" content={embedDescription} />
 
         {/* OpenGraph tags for Discord/social embeds */}
         <meta property="og:type" content="video.other" />
         <meta property="og:title" content={clip.title} />
-        <meta property="og:description" content={clip.description || `Watch this clip by @${clip.profile?.username}`} />
+        <meta property="og:description" content={embedDescription} />
         <meta property="og:url" content={clipUrl} />
-        <meta property="og:site_name" content="ShowOff" />
+        <meta property="og:site_name" content="ShowOff - Gaming Profile Platform" />
+
+        {/* Video tags */}
         <meta property="og:video" content={clip.video_url} />
         <meta property="og:video:url" content={clip.video_url} />
         <meta property="og:video:secure_url" content={clip.video_url} />
         <meta property="og:video:type" content="video/mp4" />
+        <meta property="og:video:width" content="1280" />
+        <meta property="og:video:height" content="720" />
+
+        {/* Image/Thumbnail */}
         {clip.thumbnail_url && <meta property="og:image" content={clip.thumbnail_url} />}
+        {clip.thumbnail_url && <meta property="og:image:secure_url" content={clip.thumbnail_url} />}
+        {clip.thumbnail_url && <meta property="og:image:type" content="image/jpeg" />}
+        {clip.thumbnail_url && <meta property="og:image:width" content="1280" />}
+        {clip.thumbnail_url && <meta property="og:image:height" content="720" />}
 
         {/* Twitter Card */}
         <meta name="twitter:card" content="player" />
+        <meta name="twitter:site" content="@ShowOff" />
         <meta name="twitter:title" content={clip.title} />
-        <meta name="twitter:description" content={clip.description || `Watch this clip by @${clip.profile?.username}`} />
+        <meta name="twitter:description" content={embedDescription} />
         {clip.thumbnail_url && <meta name="twitter:image" content={clip.thumbnail_url} />}
         <meta name="twitter:player" content={clip.video_url} />
+        <meta name="twitter:player:width" content="1280" />
+        <meta name="twitter:player:height" content="720" />
 
         {/* Additional metadata */}
-        <meta property="video:duration" content="60" />
+        {clip.duration && <meta property="video:duration" content={clip.duration.toString()} />}
         <meta property="video:release_date" content={clip.created_at} />
+        <meta property="article:author" content={`@${clip.profile?.username}`} />
+        <meta property="article:published_time" content={clip.created_at} />
 
         {/* Discord-specific embeds */}
         <meta name="theme-color" content="#FFFFFF" />
-        <meta property="og:author" content={`@${clip.profile?.username}`} />
       </Helmet>
 
       <div className="min-h-screen bg-black text-white">
